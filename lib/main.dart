@@ -27,10 +27,10 @@ class Subscription {
   final String customer;
   final String plan;
   final String startDate;
-  final String endDate;
-  final String status;
+  String endDate;
+  String status;
 
-  const Subscription({
+  Subscription({
     required this.id,
     required this.customer,
     required this.plan,
@@ -53,7 +53,7 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
   String selectedFilter = 'All';
 
   final List<Subscription> subscriptions = [
-    const Subscription(
+    Subscription(
       id: 'SUB001',
       customer: 'John Mathew',
       plan: 'Premium',
@@ -61,7 +61,7 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
       endDate: '01 Nov 2026',
       status: 'Active',
     ),
-    const Subscription(
+    Subscription(
       id: 'SUB002',
       customer: 'Anna Joseph',
       plan: 'Basic',
@@ -69,7 +69,7 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
       endDate: '15 Nov 2026',
       status: 'Pending',
     ),
-    const Subscription(
+    Subscription(
       id: 'SUB003',
       customer: 'David Thomas',
       plan: 'Enterprise',
@@ -77,7 +77,7 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
       endDate: '01 Oct 2026',
       status: 'Expired',
     ),
-    const Subscription(
+    Subscription(
       id: 'SUB004',
       customer: 'Maria George',
       plan: 'Premium',
@@ -85,7 +85,7 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
       endDate: '20 Nov 2026',
       status: 'Active',
     ),
-    const Subscription(
+    Subscription(
       id: 'SUB005',
       customer: 'Kevin Paul',
       plan: 'Basic',
@@ -367,6 +367,49 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
             Text(
               '${subscription.startDate}  →  ${subscription.endDate}',
               style: const TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  onPressed: subscription.status == 'Cancelled'
+                      ? null
+                      : () {
+                          setState(() {
+                            subscription.status = 'Active';
+                            final newEndDate = DateTime.now().add(
+                              const Duration(days: 30),
+                            );
+                            subscription.endDate =
+                                '${newEndDate.day}/${newEndDate.month}/${newEndDate.year}';
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Subscription renewed!'),
+                            ),
+                          );
+                        },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Renew'),
+                ),
+                const SizedBox(width: 10),
+                OutlinedButton.icon(
+                  onPressed: subscription.status == 'Cancelled'
+                      ? null
+                      : () {
+                          setState(() {
+                            subscription.status = 'Cancelled';
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Subscription cancelled!'),
+                            ),
+                          );
+                        },
+                  icon: const Icon(Icons.cancel_outlined),
+                  label: const Text('Cancel'),
+                ),
+              ],
             ),
           ],
         ),
