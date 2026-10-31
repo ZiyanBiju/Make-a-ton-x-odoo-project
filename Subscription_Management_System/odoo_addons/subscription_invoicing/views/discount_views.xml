@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_subscription_discount_tree" model="ir.ui.view">
+        <field name="name">subscription.discount.tree</field>
+        <field name="model">subscription.discount</field>
+        <field name="arch" type="xml">
+            <list string="Subscription Discounts">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="discount_type"/>
+                <field name="value"/>
+                <field name="scope"/>
+                <field name="min_purchase_amount"/>
+                <field name="used_count"/>
+                <field name="max_uses"/>
+                <field name="expiry_date"/>
+                <field name="is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_subscription_discount" model="ir.actions.act_window">
+        <field name="name">Promotional Discounts</field>
+        <field name="res_model">subscription.discount</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
