@@ -215,6 +215,7 @@ class _InvoiceManagementScreenState
             ),
 
             NavigationDestination(
+              
               icon: Icon(Icons.percent_outlined),
               selectedIcon: Icon(Icons.percent),
               label: 'GST',
