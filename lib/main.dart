@@ -6,6 +6,8 @@ import 'features/finance/screens/finance_home.dart';
 import 'features/invoices/screens/invoice_list_screen.dart';
 import 'features/invoices/screens/tax_details_screen.dart';
 import 'features/invoices/screens/discount_management_screen.dart';
+import 'features/products/screens/product_list_screen.dart';
+import 'features/users/screens/profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,25 +17,41 @@ void main() {
 class BrightLoopApp extends StatelessWidget {
   const BrightLoopApp({super.key});
 
+  static const Color navy = Color(0xFF151A35);
+  static const Color purple = Color(0xFF7657F6);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BrightLoop',
+
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3157D5),
+          seedColor: purple,
+          primary: purple,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF5F7FB),
+        scaffoldBackgroundColor: const Color(0xFFF6F5FB),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: navy,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
       ),
+
       home: const LoginScreen(),
+
       routes: {
         '/home': (context) => const BrightLoopNavigation(),
       },
     );
   }
 }
+
+// =====================================================
+// MAIN APPLICATION NAVIGATION
+// =====================================================
 
 class BrightLoopNavigation extends StatefulWidget {
   const BrightLoopNavigation({super.key});
@@ -50,12 +68,16 @@ class _BrightLoopNavigationState extends State<BrightLoopNavigation> {
     const SubscriptionDashboard(),
     const FinanceHome(),
     const InvoiceManagementScreen(),
+    const ProductListScreen(),
+    const ProfileScreen(),
   ];
 
   final List<String> titles = [
     'Subscriptions',
     'Finance',
-    'Invoices & Tax',
+    'Invoices',
+    'Products',
+    'Profile',
   ];
 
   @override
@@ -66,48 +88,78 @@ class _BrightLoopNavigationState extends State<BrightLoopNavigation> {
           children: [
             const Icon(
               Icons.all_inclusive,
-              color: Color(0xFF3157D5),
+              color: Color(0xFFB9A8FF),
+              size: 27,
             ),
-            const SizedBox(width: 8),
-            Text(
-              'BrightLoop - ${titles[selectedIndex]}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'BrightLoop - ${titles[selectedIndex]}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
             ),
           ],
         ),
       ),
+
       body: IndexedStack(
         index: selectedIndex,
         children: screens,
       ),
+
       bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        indicatorColor: const Color(0xFFEAE4FF),
         selectedIndex: selectedIndex,
+
         onDestinationSelected: (index) {
           setState(() {
             selectedIndex = index;
           });
         },
+
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.subscriptions_outlined),
             selectedIcon: Icon(Icons.subscriptions),
             label: 'Subscriptions',
           ),
+
           NavigationDestination(
             icon: Icon(Icons.account_balance_wallet_outlined),
             selectedIcon: Icon(Icons.account_balance_wallet),
             label: 'Finance',
           ),
+
           NavigationDestination(
             icon: Icon(Icons.receipt_long_outlined),
             selectedIcon: Icon(Icons.receipt_long),
             label: 'Invoices',
+          ),
+
+          NavigationDestination(
+            icon: Icon(Icons.inventory_2_outlined),
+            selectedIcon: Icon(Icons.inventory_2),
+            label: 'Products',
+          ),
+
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
     );
   }
 }
+
+// =====================================================
+// INVOICE MANAGEMENT WITH INTERNAL NAVIGATION
+// =====================================================
 
 class InvoiceManagementScreen extends StatefulWidget {
   const InvoiceManagementScreen({super.key});
@@ -127,6 +179,12 @@ class _InvoiceManagementScreenState
     DiscountManagementScreen(),
   ];
 
+  final List<String> titles = [
+    'Invoices',
+    'GST Details',
+    'Discounts',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -137,24 +195,31 @@ class _InvoiceManagementScreenState
             children: screens,
           ),
         ),
+
         NavigationBar(
+          backgroundColor: Colors.white,
+          indicatorColor: const Color(0xFFEAE4FF),
           selectedIndex: selectedIndex,
+
           onDestinationSelected: (index) {
             setState(() {
               selectedIndex = index;
             });
           },
+
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.receipt_long_outlined),
               selectedIcon: Icon(Icons.receipt_long),
               label: 'Invoices',
             ),
+
             NavigationDestination(
               icon: Icon(Icons.percent_outlined),
               selectedIcon: Icon(Icons.percent),
               label: 'GST',
             ),
+
             NavigationDestination(
               icon: Icon(Icons.local_offer_outlined),
               selectedIcon: Icon(Icons.local_offer),
