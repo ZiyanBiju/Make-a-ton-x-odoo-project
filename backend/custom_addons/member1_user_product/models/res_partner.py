@@ -12,7 +12,7 @@ class ResPartner(models.Model):
 
     customer_category = fields.Selection(
         [
-            ('individual', 'Individual'),
+ P          ('individual', 'Individual'),
             ('business', 'Business'),
         ],
         string='Customer Category',

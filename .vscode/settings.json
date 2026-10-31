@@ -3,5 +3,6 @@
     "python.defaultInterpreterPath": "C:\\Program Files\\odoo x\\python\\python.exe",
     "python.analysis.extraPaths": [
         "C:\\Program Files\\odoo x\\server"
-    ]
+    ],
+    "python.terminal.useEnvFile": true
 }
