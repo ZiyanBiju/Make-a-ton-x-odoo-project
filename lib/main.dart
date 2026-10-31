@@ -121,10 +121,17 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
   }
 
   void addSubscription() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Subscription form will be added in the next step.'),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AddSubscriptionDialog(
+          onSave: (subscription) {
+            setState(() {
+              subscriptions.add(subscription);
+            });
+          },
+        );
+      },
     );
   }
 
@@ -364,6 +371,84 @@ class _SubscriptionDashboardState extends State<SubscriptionDashboard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AddSubscriptionDialog extends StatefulWidget {
+  final Function(Subscription) onSave;
+
+  const AddSubscriptionDialog({super.key, required this.onSave});
+
+  @override
+  State<AddSubscriptionDialog> createState() => _AddSubscriptionDialogState();
+}
+
+class _AddSubscriptionDialogState extends State<AddSubscriptionDialog> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _customerController = TextEditingController();
+  final _planController = TextEditingController();
+
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now().add(const Duration(days: 30));
+
+  @override
+  void dispose() {
+    _customerController.dispose();
+    _planController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add Subscription'),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _customerController,
+              decoration: const InputDecoration(labelText: 'Customer Name'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter customer name' : null,
+            ),
+            TextFormField(
+              controller: _planController,
+              decoration: const InputDecoration(labelText: 'Plan'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter plan' : null,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              final subscription = Subscription(
+                id: 'SUB${DateTime.now().millisecondsSinceEpoch}',
+                customer: _customerController.text,
+                plan: _planController.text,
+                startDate:
+                    '${_startDate.day}/${_startDate.month}/${_startDate.year}',
+                endDate: '${_endDate.day}/${_endDate.month}/${_endDate.year}',
+                status: 'Pending',
+              );
+
+              widget.onSave(subscription);
+              Navigator.pop(context);
+            }
+          },
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
